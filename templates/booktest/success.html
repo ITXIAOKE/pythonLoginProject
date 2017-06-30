@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>登录成功，发帖页面</title>
+</head>
+<body>
+
+<h2>亲！你登录成功了，欢迎你！！！</h2>
+<form method="post" action="/post_article/">
+    {% csrf_token %}
+    标题:<input type="text" name="title"/><br/>
+    内容:<textarea name="content"></textarea><br/>
+    <input type="submit" value="发帖"/>
+</form>
+</body>
+</html>

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>登录页面</title>
+    <script src="/static/js/jquery-1.12.4.min.js"></script>
+    <style>
+        #errorMsg {
+            display: none;
+            color: red;
+        }
+    </style>
+    <script>
+        $(function () {
+
+            $('#btnLogin').click(function () {
+                $('uname').reset;
+
+                csrf = $('input').val();
+                uname = $('#uname').val();
+                password = $('#password').val();
+                vcode = $('#vcode').val();
+
+                //发起ajax请求，注意csrf攻击
+                $.post('/login_ajax_check/', {
+                    'csrfmiddlewaretoken': csrf,
+                    'uname': uname,
+                    'password': password,
+                    'vcode': vcode,
+                }, function (data) {
+                    //获取返回的数据并进行操作
+                    if (data.msg === 'ok') {
+                        //登录成功
+                        location.href = '/success/' //跳转到成功页面
+                    } else if (data.msg === 'fail_user') {
+                        $('#errorMsg').show().text('亲！用户名或密码错误！')
+
+                    } else if (data.msg === 'fail_verify') {
+                        //验证码错误
+                        $('#errorMsg').show().text('亲！验证码错误！')
+                    }
+                })
+            });
+        });
+
+    </script>
+</head>
+
+<body>
+
+<div>
+    {% csrf_token %}
+    用户名：<input type="text" id="uname"><br/>
+    密&nbsp;&nbsp;码：<input type="password" id="password"><br/>
+
+    验证码：<input type="text" id="vcode"/><br/>
+    <!--直接调用生产图片验证码的视图函数，生产验证码-->
+    <img src="/verify_code/" id="imgvcode"/><br/>
+
+    <input type="button" value="登录" id="btnLogin"><br/>
+    <div id="errorMsg"></div>
+</div>
+
+</body>
+</html>
